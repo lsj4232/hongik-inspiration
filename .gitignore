@@ -1,0 +1,6 @@
+.DS_Store
+홍익학당 공식홈페이지.html
+홍익학당 공식홈페이지_files/
+images/.trash/
+*.pyc
+__pycache__/

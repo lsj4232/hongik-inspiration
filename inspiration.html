@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<meta name="theme-color" content="#1a120c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>영감 노트 — 홍익학당 이미지</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  /* 정적 모드(GitHub Pages 등) — 서버 필요한 편집 UI 숨김 */
+  body.static-mode .new-folder-btn,
+  body.static-mode .reload-btn,
+  body.static-mode .cluster .actions,
+  body.static-mode .img-actions,
+  body.static-mode .filename .pencil,
+  body.static-mode .sidebar-hint { display: none !important; }
+  body.static-mode .filename { cursor: default; pointer-events: none; }
+  body.static-mode .filename:hover { color: #d4c4ad; background: transparent; border-bottom-color: transparent; }
+
+  body {
+    font-family: -apple-system, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+    background: radial-gradient(ellipse at center, #2a1a10 0%, #0d0807 100%);
+    color: #f4e9d8;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.4);
+    border-right: 1px solid rgba(255, 140, 60, 0.18);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.25s ease;
+    overflow: hidden;
+  }
+  .sidebar.collapsed { width: 0; border-right: none; }
+  .vow-link {
+    margin: 14px 12px 6px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(255, 136, 56, 0.18), rgba(212, 84, 26, 0.1));
+    border: 1px solid rgba(255, 140, 60, 0.35);
+    color: #ffb070;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .vow-link:hover { background: linear-gradient(135deg, rgba(255, 136, 56, 0.3), rgba(212, 84, 26, 0.2)); }
+  .vow-link.active {
+    background: linear-gradient(135deg, #ff8838, #d4541a);
+    color: #fff;
+    border-color: transparent;
+  }
+  .vow-link .ic { font-size: 17px; }
+  .sidebar-divider {
+    margin: 6px 16px 4px;
+    border-top: 1px solid rgba(255, 140, 60, 0.12);
+    flex-shrink: 0;
+  }
+  .sidebar-header {
+    padding: 16px 16px 6px;
+    font-size: 12px;
+    color: #a89580;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .new-folder-btn {
+    background: rgba(255, 140, 60, 0.12);
+    border: 1px solid rgba(255, 140, 60, 0.35);
+    color: #ffb070;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.15s;
+  }
+  .new-folder-btn:hover { background: rgba(255, 140, 60, 0.25); }
+  .sidebar-hint {
+    padding: 0 16px 12px;
+    font-size: 11px;
+    color: #6b5c48;
+    line-height: 1.5;
+    flex-shrink: 0;
+  }
+  .clusters {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 8px 16px;
+  }
+  .clusters::-webkit-scrollbar { width: 6px; }
+  .clusters::-webkit-scrollbar-thumb { background: rgba(255, 140, 60, 0.3); border-radius: 3px; }
+  .cluster {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 2px;
+    color: #d4c4ad;
+    font-size: 14px;
+    transition: background 0.15s;
+  }
+  .cluster:hover { background: rgba(255, 140, 60, 0.08); }
+  .cluster.active {
+    background: linear-gradient(135deg, rgba(255, 136, 56, 0.25), rgba(212, 84, 26, 0.15));
+    color: #ffb070;
+    font-weight: 600;
+  }
+  .cluster .cnt {
+    font-size: 11px;
+    color: #6b5c48;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1px 7px;
+    border-radius: 9px;
+    flex-shrink: 0;
+  }
+  .cluster.active .cnt { background: rgba(255, 140, 60, 0.25); color: #ffb070; }
+  .cluster .actions {
+    display: none;
+    gap: 4px;
+    margin-left: 6px;
+    margin-right: 4px;
+  }
+  .cluster:hover .actions { display: inline-flex; }
+  .cluster .act {
+    background: transparent;
+    border: none;
+    color: #a89580;
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+  }
+  .cluster .act:hover { background: rgba(255, 255, 255, 0.1); color: #ffb070; }
+  .cluster .act.del:hover { color: #ff8b8b; background: rgba(255, 100, 100, 0.12); }
+  .cluster .label-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+  }
+  .cluster input.folder-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 140, 60, 0.6);
+    border-radius: 5px;
+    color: #f4e9d8;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    min-width: 0;
+  }
+  .new-row {
+    padding: 6px 8px 10px;
+  }
+  .new-row input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 140, 60, 0.6);
+    border-radius: 6px;
+    color: #f4e9d8;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+  }
+  .row-err {
+    color: #ff8b8b;
+    font-size: 11px;
+    padding: 4px 12px 0;
+  }
+  .reload-btn {
+    margin: 0 16px 12px;
+    padding: 7px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 140, 60, 0.25);
+    color: #d4c4ad;
+    border-radius: 7px;
+    font-size: 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .reload-btn:hover { background: rgba(255, 140, 60, 0.15); }
+
+  /* ---------- Toggle button ---------- */
+  .toggle-btn {
+    position: absolute;
+    top: 12px;
+    left: 252px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 140, 60, 0.25);
+    color: #f4e9d8;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.25s ease;
+  }
+  .toggle-btn:hover { background: rgba(255, 140, 60, 0.15); }
+  .sidebar.collapsed ~ .toggle-btn { left: 12px; }
+
+  /* ---------- Main ---------- */
+  .main {
+    flex: 1;
+    display: flex;
+    min-width: 0;
+  }
+  .main.vow-mode .image-view { display: none; }
+  .main:not(.vow-mode) .vow-view { display: none; }
+
+  /* ---------- Vow view ---------- */
+  .vow-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 56px 60px 32px;
+    overflow: hidden;
+  }
+  .vow-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffb070 0%, #ff8838 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .vow-header .vow-sub {
+    font-size: 13px;
+    color: #a89580;
+    margin-bottom: 22px;
+  }
+  .vow-input {
+    width: 100%;
+    flex: 0 0 240px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 140, 60, 0.3);
+    border-radius: 12px;
+    padding: 18px 22px;
+    color: #f4e9d8;
+    font-size: 16px;
+    line-height: 1.75;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .vow-input:focus {
+    border-color: rgba(255, 140, 60, 0.7);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 4px rgba(255, 140, 60, 0.08);
+  }
+  .vow-input::placeholder { color: #6b5c48; font-style: italic; }
+  .vow-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .vow-toolbar .vcount {
+    font-size: 12px;
+    color: #a89580;
+    margin-left: auto;
+  }
+  .vow-list {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 18px;
+    padding-right: 6px;
+  }
+  .vow-list::-webkit-scrollbar { width: 6px; }
+  .vow-list::-webkit-scrollbar-thumb { background: rgba(255, 140, 60, 0.3); border-radius: 3px; }
+  .vow-entry {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 140, 60, 0.15);
+    border-left: 4px solid #ff8838;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .vow-entry .vmeta {
+    font-size: 11px;
+    color: #a89580;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .vow-entry .vtext {
+    font-size: 15px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #f4e9d8;
+    padding-right: 28px;
+  }
+  .vow-entry .vdel {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: #6b5c48;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 2px 8px;
+  }
+  .vow-entry .vdel:hover { color: #ff6b6b; }
+  .vow-empty {
+    text-align: center;
+    color: #6b5c48;
+    padding: 40px 20px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ---------- Mobile responsive ---------- */
+  @media (max-width: 900px) {
+    body { overflow: hidden; }
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 80vw;
+      max-width: 320px;
+      z-index: 50;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar.collapsed { width: 80vw; transform: translateX(-100%); }
+    .toggle-btn {
+      left: 10px !important;
+      top: 10px;
+      width: 40px;
+      height: 40px;
+    }
+    .sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 49;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .sidebar.open ~ .sidebar-backdrop { opacity: 1; pointer-events: auto; }
+
+    .main { width: 100%; }
+    .image-view {
+      flex-direction: column !important;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .pane { padding: 16px; }
+    .pane.left {
+      flex: 0 0 auto;
+      min-height: 50vh;
+      padding-top: 60px;
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 140, 60, 0.15);
+    }
+    .pane.right {
+      max-width: 100%;
+      flex: 1;
+      min-height: 50vh;
+    }
+    .nav-btn { width: 48px; height: 48px; font-size: 22px; }
+    .move-btn { font-size: 11px; padding: 6px 10px; }
+    .delete-btn { font-size: 12px; padding: 6px 9px; }
+    .img-stage img { max-height: 45vh; }
+    h1 { font-size: 18px; }
+    textarea { flex: 0 0 120px; font-size: 14px; }
+
+    .vow-view { padding: 60px 20px 24px; }
+    .vow-header h1 { font-size: 22px; }
+    .vow-input { flex: 0 0 180px; font-size: 15px; padding: 14px 16px; }
+
+    .folder-popover {
+      right: 8px;
+      width: 220px;
+      max-height: 50vh;
+    }
+  }
+  .pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 28px;
+    min-width: 0;
+  }
+  .left {
+    border-right: 1px solid rgba(255, 140, 60, 0.15);
+    position: relative;
+    padding-top: 56px;
+  }
+  .img-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 0;
+  }
+  .img-stage img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 40px rgba(255, 100, 30, 0.25));
+    user-select: none;
+  }
+  .nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 140, 60, 0.3);
+    color: #f4e9d8;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: all 0.15s;
+    z-index: 5;
+  }
+  .nav-btn:hover { background: rgba(255, 140, 60, 0.3); transform: translateY(-50%) scale(1.05); }
+  .nav-btn.prev { left: 0; }
+  .nav-btn.next { right: 0; }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .img-actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 6px;
+    z-index: 6;
+  }
+  .move-btn {
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 140, 60, 0.4);
+    color: #ffb070;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .move-btn:hover { background: rgba(255, 140, 60, 0.25); color: #fff; }
+  .delete-btn {
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 100, 100, 0.4);
+    color: #ff8b8b;
+    padding: 7px 11px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    line-height: 1;
+  }
+  .delete-btn:hover { background: rgba(255, 100, 100, 0.22); color: #fff; }
+  .folder-popover {
+    position: absolute;
+    top: 50px;
+    right: 8px;
+    z-index: 7;
+    width: 240px;
+    max-height: 360px;
+    background: #1a120c;
+    border: 1px solid rgba(255, 140, 60, 0.35);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .folder-popover.hidden { display: none; }
+  .popover-header {
+    padding: 10px 12px;
+    font-size: 11px;
+    color: #a89580;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 140, 60, 0.15);
+    flex-shrink: 0;
+  }
+  .popover-list {
+    overflow-y: auto;
+    flex: 1;
+  }
+  .popover-list::-webkit-scrollbar { width: 6px; }
+  .popover-list::-webkit-scrollbar-thumb { background: rgba(255, 140, 60, 0.3); border-radius: 3px; }
+  .popover-item {
+    padding: 9px 12px;
+    cursor: pointer;
+    color: #d4c4ad;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .popover-item:last-child { border-bottom: none; }
+  .popover-item:hover { background: rgba(255, 140, 60, 0.12); color: #ffb070; }
+  .popover-item.current { color: #6b5c48; cursor: default; }
+  .popover-item.current:hover { background: transparent; color: #6b5c48; }
+  .popover-item .pcnt {
+    font-size: 11px;
+    color: #6b5c48;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1px 7px;
+    border-radius: 9px;
+  }
+  .popover-item.new {
+    color: #ffb070;
+    border-top: 1px solid rgba(255, 140, 60, 0.2);
+  }
+  .popover-newrow {
+    padding: 8px 10px;
+    border-top: 1px solid rgba(255, 140, 60, 0.2);
+    flex-shrink: 0;
+  }
+  .popover-newrow input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 140, 60, 0.5);
+    border-radius: 6px;
+    color: #f4e9d8;
+    padding: 6px 9px;
+    font-size: 12px;
+    outline: none;
+  }
+  .img-meta {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #a89580;
+    flex-shrink: 0;
+  }
+  .img-meta .filename {
+    color: #d4c4ad;
+    font-family: monospace;
+    font-size: 11px;
+    cursor: pointer;
+    border-bottom: 1px dashed transparent;
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+  .img-meta .filename:hover {
+    color: #ffb070;
+    background: rgba(255, 140, 60, 0.08);
+    border-bottom-color: rgba(255, 140, 60, 0.4);
+  }
+  .img-meta .filename .pencil { opacity: 0.5; margin-left: 4px; }
+  .img-meta .pos { color: #ffb070; font-weight: 600; }
+  .img-meta input.rename-input {
+    font-family: monospace;
+    font-size: 11px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 140, 60, 0.5);
+    border-radius: 4px;
+    color: #f4e9d8;
+    padding: 3px 6px;
+    outline: none;
+    width: 280px;
+  }
+  .img-meta input.rename-input:focus { border-color: #ff8838; }
+  .img-meta .rename-err {
+    display: block;
+    color: #ff8b8b;
+    font-size: 11px;
+    margin-top: 4px;
+  }
+
+  /* ---------- Right pane ---------- */
+  .right {
+    max-width: 520px;
+    gap: 14px;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffb070;
+    letter-spacing: 0.5px;
+    word-break: break-word;
+  }
+  .subtitle {
+    font-size: 12px;
+    color: #a89580;
+    margin-top: 4px;
+  }
+  textarea {
+    width: 100%;
+    flex: 0 0 150px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 140, 60, 0.25);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #f4e9d8;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  textarea:focus {
+    border-color: rgba(255, 140, 60, 0.7);
+    background: rgba(255, 255, 255, 0.06);
+  }
+  textarea::placeholder { color: #6b5c48; }
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 140, 60, 0.3);
+    color: #f4e9d8;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  button.primary {
+    background: linear-gradient(135deg, #ff8838, #d4541a);
+    border-color: transparent;
+    color: #fff;
+    font-weight: 600;
+  }
+  button.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(255, 100, 30, 0.35); }
+  button:hover { background: rgba(255, 255, 255, 0.08); }
+  .count {
+    font-size: 12px;
+    color: #a89580;
+    margin-left: auto;
+  }
+  .list {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 6px;
+    min-height: 0;
+  }
+  .list::-webkit-scrollbar { width: 6px; }
+  .list::-webkit-scrollbar-thumb { background: rgba(255, 140, 60, 0.3); border-radius: 3px; }
+  .entry {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 140, 60, 0.12);
+    border-left: 3px solid #ff8838;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .entry .meta {
+    font-size: 11px;
+    color: #a89580;
+    margin-bottom: 4px;
+  }
+  .entry .text {
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding-right: 22px;
+  }
+  .entry .del {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    color: #6b5c48;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 6px;
+  }
+  .entry .del:hover { color: #ff6b6b; }
+  .empty {
+    text-align: center;
+    color: #6b5c48;
+    padding: 28px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="vow-link" id="vowLink"><span class="ic">🪷</span><span>나의 서원</span></div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-header">
+      <span>테마 (폴더)</span>
+      <button class="new-folder-btn" id="newFolderBtn" title="새 폴더">+</button>
+    </div>
+    <div class="sidebar-hint">images/ 안의 하위 폴더가 자동으로 테마가 됩니다. 폴더 위에 마우스를 올리면 이름변경/삭제가 보입니다.</div>
+    <div class="clusters" id="clusters"></div>
+    <button class="reload-btn" id="reloadBtn">↻ 폴더 다시 읽기</button>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <button class="toggle-btn" id="toggleBtn" title="사이드바 토글">☰</button>
+
+  <div class="main" id="main">
+    <div class="vow-view" id="vowView">
+      <div class="vow-header">
+        <h1>🪷 나의 서원</h1>
+        <div class="vow-sub">참된 마음으로 호쾌한 서원을 적습니다. 적은 서원은 이 자리에 차곡차곡 쌓입니다.</div>
+      </div>
+      <textarea class="vow-input" id="vowInput" placeholder="나는 ____ 하기를 서원합니다.
+
+호쾌하게, 두려움 없이, 망설임 없이 적어보세요.
+(Cmd+Enter 저장)"></textarea>
+      <div class="vow-toolbar">
+        <button class="primary" id="vowSaveBtn">서원 새기기</button>
+        <button id="vowExportBtn">전체 내보내기</button>
+        <button id="backupBtn" title="모든 영감/서원 데이터를 JSON으로 저장">📦 백업</button>
+        <button id="restoreBtn" title="JSON 백업 파일에서 복원">⬆ 복원</button>
+        <input type="file" id="restoreFile" accept=".json,application/json" style="display:none">
+        <span class="vcount" id="vowCount">0개</span>
+      </div>
+      <div class="vow-list" id="vowList"></div>
+    </div>
+
+    <div class="image-view" style="display:flex; flex:1; min-width:0;">
+    <div class="pane left">
+      <div class="img-stage" id="stage">
+        <button class="nav-btn prev" id="prevBtn" title="이전 (←)">‹</button>
+        <img id="image" src="" alt="">
+        <button class="nav-btn next" id="nextBtn" title="다음 (→)">›</button>
+        <div class="img-actions">
+          <button class="delete-btn" id="deleteBtn" title="삭제 (휴지통으로 이동)">🗑 삭제</button>
+          <button class="move-btn" id="moveBtn" title="폴더로 이동">📁 폴더로 이동 ▾</button>
+        </div>
+        <div class="folder-popover hidden" id="folderPopover"></div>
+      </div>
+      <div class="img-meta">
+        <span class="pos" id="pos">0 / 0</span> ·
+        <span class="filename" id="filename" title="클릭해서 이름 변경"></span>
+      </div>
+    </div>
+
+    <div class="pane right">
+      <div>
+        <h1 id="themeTitle">영감 노트</h1>
+        <div class="subtitle" id="themeSub">이미지를 보며 떠오른 생각을 기록하세요</div>
+      </div>
+      <textarea id="input" placeholder="이 이미지를 보며 떠오른 영감, 통찰, 마음의 움직임을 적어보세요... (Cmd+Enter 저장)"></textarea>
+      <div class="toolbar">
+        <button class="primary" id="saveBtn">저장</button>
+        <button id="exportBtn">전체 내보내기</button>
+        <span class="count" id="count">0개</span>
+      </div>
+      <div class="list" id="list"></div>
+    </div>
+    </div>
+  </div>
+
+<script>
+  const KEY = 'image_inspirations_v3';
+  // 로컬 서버(serve.py)에서 띄운 경우만 편집 기능 활성화
+  const IS_STATIC = !['localhost','127.0.0.1','0.0.0.0'].includes(location.hostname);
+  let manifest = null;
+  let currentCluster = null;
+  let currentList = [];
+  let currentIdx = 0;
+
+  const el = {
+    sidebar: document.getElementById('sidebar'),
+    clusters: document.getElementById('clusters'),
+    toggleBtn: document.getElementById('toggleBtn'),
+    reloadBtn: document.getElementById('reloadBtn'),
+    newFolderBtn: document.getElementById('newFolderBtn'),
+    moveBtn: document.getElementById('moveBtn'),
+    deleteBtn: document.getElementById('deleteBtn'),
+    folderPopover: document.getElementById('folderPopover'),
+    image: document.getElementById('image'),
+    pos: document.getElementById('pos'),
+    filename: document.getElementById('filename'),
+    prevBtn: document.getElementById('prevBtn'),
+    nextBtn: document.getElementById('nextBtn'),
+    input: document.getElementById('input'),
+    list: document.getElementById('list'),
+    count: document.getElementById('count'),
+    themeTitle: document.getElementById('themeTitle'),
+    themeSub: document.getElementById('themeSub'),
+    main: document.getElementById('main'),
+    vowLink: document.getElementById('vowLink'),
+    vowInput: document.getElementById('vowInput'),
+    vowSaveBtn: document.getElementById('vowSaveBtn'),
+    vowExportBtn: document.getElementById('vowExportBtn'),
+    vowCount: document.getElementById('vowCount'),
+    vowList: document.getElementById('vowList'),
+  };
+
+  const VOW_KEY = 'my_vows_v1';
+  function loadVows() { try { return JSON.parse(localStorage.getItem(VOW_KEY)) || []; } catch { return []; } }
+  function saveVows(arr) { localStorage.setItem(VOW_KEY, JSON.stringify(arr)); }
+
+  function showVowView() {
+    el.main.classList.add('vow-mode');
+    el.vowLink.classList.add('active');
+    el.clusters.querySelectorAll('.cluster.active').forEach(n => n.classList.remove('active'));
+    renderVows();
+    setTimeout(() => el.vowInput.focus(), 50);
+  }
+  function showImageView() {
+    el.main.classList.remove('vow-mode');
+    el.vowLink.classList.remove('active');
+    if (currentCluster) {
+      const node = el.clusters.querySelector(`.cluster[data-id="${CSS.escape(currentCluster.id)}"]`);
+      if (node) node.classList.add('active');
+    }
+  }
+
+  function renderVows() {
+    const items = loadVows();
+    el.vowCount.textContent = `${items.length}개`;
+    if (!items.length) {
+      el.vowList.innerHTML = '<div class="vow-empty">아직 새겨진 서원이 없습니다.<br>위에 호쾌하게 적어보세요.</div>';
+      return;
+    }
+    el.vowList.innerHTML = items.map((it, i) => `
+      <div class="vow-entry">
+        <div class="vmeta">${fmtDate(it.ts)}</div>
+        <div class="vtext">${escapeHtml(it.text)}</div>
+        <button class="vdel" data-i="${i}" title="삭제">×</button>
+      </div>
+    `).join('');
+  }
+
+  function loadAll() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } }
+  function saveAll(o) { localStorage.setItem(KEY, JSON.stringify(o)); }
+
+  function fmtDate(ts) {
+    const d = new Date(ts);
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function imgUrl(path) {
+    return 'images/' + path.split('/').map(encodeURIComponent).join('/');
+  }
+  function basename(path) {
+    return path.split('/').pop();
+  }
+
+  function renderClusters() {
+    el.clusters.innerHTML = manifest.clusters.map(c => {
+      const isUnclassified = c.id === '_unclassified';
+      const actions = isUnclassified ? '' : `
+        <span class="actions">
+          <button class="act rename" title="이름 변경">✎</button>
+          <button class="act del" title="삭제">×</button>
+        </span>`;
+      return `
+      <div class="cluster ${currentCluster && c.id === currentCluster.id ? 'active' : ''}" data-id="${escapeHtml(c.id)}">
+        <span class="label-text">${escapeHtml(c.label)}</span>
+        ${actions}
+        <span class="cnt">${c.images.length}</span>
+      </div>`;
+    }).join('');
+    el.clusters.querySelectorAll('.cluster').forEach(node => {
+      const id = node.dataset.id;
+      node.onclick = (e) => {
+        if (e.target.closest('.act') || e.target.closest('input')) return;
+        const c = manifest.clusters.find(x => x.id === id);
+        selectCluster(c);
+      };
+      const renameBtn = node.querySelector('.act.rename');
+      const delBtn = node.querySelector('.act.del');
+      if (renameBtn) renameBtn.onclick = (e) => { e.stopPropagation(); startFolderRename(node, id); };
+      if (delBtn) delBtn.onclick = (e) => { e.stopPropagation(); deleteFolder(id); };
+    });
+  }
+
+  function startNewFolder() {
+    if (el.clusters.querySelector('.new-row')) return;
+    const row = document.createElement('div');
+    row.className = 'new-row';
+    row.innerHTML = `<input type="text" placeholder="새 폴더 이름" maxlength="80"><div class="row-err" style="display:none"></div>`;
+    el.clusters.prepend(row);
+    const input = row.querySelector('input');
+    const err = row.querySelector('.row-err');
+    input.focus();
+
+    let done = false;
+    const cleanup = () => { if (done) return; done = true; row.remove(); };
+    const commit = async () => {
+      const name = input.value.trim();
+      if (!name) { cleanup(); return; }
+      input.disabled = true;
+      try {
+        const r = await fetch('/folder/create', {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ name })
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+        cleanup();
+        await loadManifest(name);
+      } catch (e) {
+        err.style.display = 'block';
+        err.textContent = e.message || String(e);
+        input.disabled = false;
+        input.focus();
+      }
+    };
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+      else if (e.key === 'Escape') { e.preventDefault(); cleanup(); }
+    });
+    input.addEventListener('blur', () => setTimeout(() => { if (!done) commit(); }, 100));
+  }
+
+  function startFolderRename(node, oldName) {
+    if (node.querySelector('input')) return;
+    const labelSpan = node.querySelector('.label-text');
+    const original = labelSpan.textContent;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'folder-input';
+    input.value = original;
+    labelSpan.replaceWith(input);
+    input.focus();
+    input.select();
+
+    let done = false;
+    const restore = () => {
+      if (done) return;
+      done = true;
+      const span = document.createElement('span');
+      span.className = 'label-text';
+      span.textContent = original;
+      input.replaceWith(span);
+    };
+    const commit = async () => {
+      const newName = input.value.trim();
+      if (!newName || newName === original) { restore(); return; }
+      input.disabled = true;
+      try {
+        const r = await fetch('/folder/rename', {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ old: oldName, new: newName })
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+        done = true;
+        await loadManifest(newName);
+      } catch (e) {
+        alert(e.message || String(e));
+        input.disabled = false;
+        input.focus();
+      }
+    };
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+      else if (e.key === 'Escape') { e.preventDefault(); restore(); }
+    });
+    input.addEventListener('blur', () => setTimeout(() => { if (!done) commit(); }, 100));
+  }
+
+  async function deleteFolder(name) {
+    const cluster = manifest.clusters.find(c => c.id === name);
+    if (!cluster) return;
+    const count = cluster.images.length;
+    let moveContents = false;
+    if (count === 0) {
+      if (!confirm(`폴더 "${name}"을(를) 삭제할까요?`)) return;
+    } else {
+      if (!confirm(`폴더 "${name}"에 이미지 ${count}장이 있습니다.\n모두 "미분류"로 옮기고 폴더를 삭제할까요?`)) return;
+      moveContents = true;
+    }
+    try {
+      const r = await fetch('/folder/delete', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ name, move_contents: moveContents })
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+      // localStorage 키 마이그레이션 (이름 충돌로 변경된 경우)
+      if (Array.isArray(data.renames) && data.renames.length) {
+        const all = loadAll();
+        for (const rn of data.renames) {
+          if (all[rn.old_basename]) {
+            if (all[rn.new_basename]) {
+              all[rn.new_basename] = all[rn.new_basename].concat(all[rn.old_basename]);
+            } else {
+              all[rn.new_basename] = all[rn.old_basename];
+            }
+            delete all[rn.old_basename];
+          }
+        }
+        saveAll(all);
+      }
+      const preferId = (currentCluster && currentCluster.id === name) ? '_unclassified' : currentCluster?.id;
+      await loadManifest(preferId);
+    } catch (e) {
+      alert(e.message || String(e));
+    }
+  }
+
+  function selectCluster(c) {
+    currentCluster = c;
+    currentList = c.images;
+    currentIdx = 0;
+    el.themeTitle.textContent = c.label;
+    el.themeSub.textContent = `${c.images.length}장의 이미지`;
+    showImageView();
+    renderClusters();
+    showImage();
+  }
+
+  function showImage() {
+    if (!currentList.length) {
+      el.image.src = '';
+      el.pos.textContent = '0 / 0';
+      el.filename.innerHTML = '';
+      el.prevBtn.disabled = true;
+      el.nextBtn.disabled = true;
+      el.list.innerHTML = '<div class="empty">이 폴더에 이미지가 없습니다.</div>';
+      el.count.textContent = '0개';
+      return;
+    }
+    const path = currentList[currentIdx];
+    el.image.src = imgUrl(path);
+    el.image.alt = path;
+    el.pos.textContent = `${currentIdx + 1} / ${currentList.length}`;
+    el.filename.innerHTML = `${escapeHtml(path)}<span class="pencil">✎</span>`;
+    el.prevBtn.disabled = currentIdx === 0;
+    el.nextBtn.disabled = currentIdx === currentList.length - 1;
+    el.input.value = '';
+    renderEntries();
+  }
+
+  function startRename() {
+    if (!currentList.length) return;
+    const path = currentList[currentIdx];
+    const fn = basename(path);
+    const meta = el.filename.parentElement;
+    const span = el.filename;
+    span.style.display = 'none';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'rename-input';
+    input.value = fn;
+    const err = document.createElement('span');
+    err.className = 'rename-err';
+    meta.appendChild(input);
+    meta.appendChild(err);
+
+    // 확장자 앞부분만 선택
+    const dot = fn.lastIndexOf('.');
+    input.focus();
+    input.setSelectionRange(0, dot > 0 ? dot : fn.length);
+
+    let done = false;
+    const cleanup = () => {
+      if (done) return;
+      done = true;
+      input.remove();
+      err.remove();
+      span.style.display = '';
+    };
+    const cancel = () => cleanup();
+    const commit = async () => {
+      const newName = input.value.trim();
+      if (!newName || newName === fn) { cleanup(); return; }
+      input.disabled = true;
+      try {
+        const r = await fetch('/rename', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ old: path, new_name: newName }),
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+
+        // localStorage 키 마이그레이션
+        const all = loadAll();
+        if (all[data.old_basename]) {
+          if (all[data.new_basename]) {
+            all[data.new_basename] = all[data.new_basename].concat(all[data.old_basename]);
+          } else {
+            all[data.new_basename] = all[data.old_basename];
+          }
+          delete all[data.old_basename];
+          saveAll(all);
+        }
+
+        cleanup();
+        // manifest 새로고침 후 같은 이미지로 위치 복구
+        await loadManifestKeepingFile(data.new);
+      } catch (e) {
+        err.textContent = String(e.message || e);
+        input.disabled = false;
+        input.focus();
+      }
+    };
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+      else if (e.key === 'Escape') { e.preventDefault(); cancel(); }
+    });
+    input.addEventListener('blur', () => { setTimeout(() => { if (!done) commit(); }, 100); });
+  }
+
+  async function loadManifestKeepingFile(newPath) {
+    const r = await fetch('manifest.json?_=' + Date.now());
+    const m = await r.json();
+    manifest = m;
+    // newPath가 들어있는 클러스터 찾기
+    let foundCluster = null, foundIdx = 0;
+    for (const c of m.clusters) {
+      const idx = c.images.indexOf(newPath);
+      if (idx >= 0) { foundCluster = c; foundIdx = idx; break; }
+    }
+    if (foundCluster) {
+      currentCluster = foundCluster;
+      currentList = foundCluster.images;
+      currentIdx = foundIdx;
+      el.themeTitle.textContent = foundCluster.label;
+      el.themeSub.textContent = `${foundCluster.images.length}장의 이미지`;
+      renderClusters();
+      showImage();
+    } else {
+      // fallback
+      selectCluster(m.clusters[0]);
+    }
+  }
+
+  function go(delta) {
+    const next = currentIdx + delta;
+    if (next < 0 || next >= currentList.length) return;
+    currentIdx = next;
+    showImage();
+  }
+
+  function renderEntries() {
+    const all = loadAll();
+    const path = currentList[currentIdx];
+    const items = all[basename(path)] || [];
+    el.count.textContent = `${items.length}개`;
+    if (!items.length) {
+      el.list.innerHTML = '<div class="empty">이 이미지에 대한 기록이 아직 없습니다.</div>';
+      return;
+    }
+    el.list.innerHTML = items.map((it, i) => `
+      <div class="entry">
+        <div class="meta">${fmtDate(it.ts)}</div>
+        <div class="text">${escapeHtml(it.text)}</div>
+        <button class="del" data-i="${i}" title="삭제">×</button>
+      </div>
+    `).join('');
+  }
+
+  el.list.onclick = (e) => {
+    if (e.target.classList.contains('del')) {
+      const i = +e.target.dataset.i;
+      const path = currentList[currentIdx];
+      const fn = basename(path);
+      const all = loadAll();
+      all[fn].splice(i, 1);
+      if (!all[fn].length) delete all[fn];
+      saveAll(all);
+      renderEntries();
+    }
+  };
+
+  document.getElementById('saveBtn').onclick = () => {
+    const text = el.input.value.trim();
+    if (!text) { el.input.focus(); return; }
+    const path = currentList[currentIdx];
+    const fn = basename(path);
+    const all = loadAll();
+    if (!all[fn]) all[fn] = [];
+    all[fn].unshift({ text, ts: Date.now(), path });
+    saveAll(all);
+    el.input.value = '';
+    renderEntries();
+  };
+
+  document.getElementById('exportBtn').onclick = () => {
+    const all = loadAll();
+    const lines = [];
+    for (const cluster of manifest.clusters) {
+      const ones = cluster.images.filter(p => all[basename(p)]?.length);
+      if (!ones.length) continue;
+      lines.push(`\n========== ${cluster.label} ==========\n`);
+      for (const p of ones) {
+        lines.push(`\n[ ${p} ]`);
+        for (const it of all[basename(p)]) {
+          lines.push(`  · ${fmtDate(it.ts)}\n    ${it.text.split('\n').join('\n    ')}`);
+        }
+      }
+    }
+    if (!lines.length) { alert('저장된 영감이 없습니다.'); return; }
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `영감노트_${new Date().toISOString().slice(0,10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  el.prevBtn.onclick = () => go(-1);
+  el.nextBtn.onclick = () => go(1);
+  el.toggleBtn.onclick = () => {
+    const isMobile = window.matchMedia('(max-width: 900px)').matches;
+    if (isMobile) {
+      el.sidebar.classList.toggle('open');
+    } else {
+      el.sidebar.classList.toggle('collapsed');
+    }
+  };
+  document.getElementById('sidebarBackdrop').onclick = () => el.sidebar.classList.remove('open');
+  // 모바일에서 클러스터 선택하면 사이드바 닫기
+  el.clusters.addEventListener('click', () => {
+    if (window.matchMedia('(max-width: 900px)').matches) el.sidebar.classList.remove('open');
+  });
+  el.vowLink.addEventListener('click', () => {
+    if (window.matchMedia('(max-width: 900px)').matches) el.sidebar.classList.remove('open');
+  });
+  el.reloadBtn.onclick = () => loadManifest(currentCluster?.id);
+  el.filename.onclick = () => startRename();
+  el.newFolderBtn.onclick = () => startNewFolder();
+  el.moveBtn.onclick = (e) => { e.stopPropagation(); toggleFolderPopover(); };
+  el.deleteBtn.onclick = () => deleteCurrentImage();
+
+  async function deleteCurrentImage() {
+    if (!currentList.length) return;
+    const path = currentList[currentIdx];
+    if (!confirm(`이 이미지를 삭제할까요?\n\n${path}\n\n파일은 images/.trash/ 로 이동되어 웹에서 보이지 않게 됩니다.\n(필요 시 Finder의 숨김 폴더에서 복구 가능)`)) return;
+    try {
+      const r = await fetch('/delete', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ old: path })
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+      const prevId = currentCluster?.id;
+      const r2 = await fetch('manifest.json?_=' + Date.now());
+      manifest = await r2.json();
+      const cluster = manifest.clusters.find(c => c.id === prevId) || manifest.clusters[0];
+      currentCluster = cluster;
+      currentList = cluster.images;
+      if (currentIdx >= currentList.length) currentIdx = Math.max(0, currentList.length - 1);
+      el.themeTitle.textContent = cluster.label;
+      el.themeSub.textContent = `${cluster.images.length}장의 이미지`;
+      renderClusters();
+      showImage();
+    } catch (err) {
+      alert(err.message || String(err));
+    }
+  }
+  el.vowLink.onclick = () => showVowView();
+
+  el.vowList.onclick = (e) => {
+    if (e.target.classList.contains('vdel')) {
+      if (!confirm('이 서원을 삭제할까요?')) return;
+      const i = +e.target.dataset.i;
+      const items = loadVows();
+      items.splice(i, 1);
+      saveVows(items);
+      renderVows();
+    }
+  };
+
+  el.vowSaveBtn.onclick = () => {
+    const text = el.vowInput.value.trim();
+    if (!text) { el.vowInput.focus(); return; }
+    const items = loadVows();
+    items.unshift({ text, ts: Date.now() });
+    saveVows(items);
+    el.vowInput.value = '';
+    renderVows();
+  };
+
+  el.vowInput.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      el.vowSaveBtn.click();
+    }
+  });
+
+  document.getElementById('backupBtn').onclick = () => {
+    const data = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      inspirations: loadAll(),
+      vows: loadVows(),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `영감노트_백업_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  document.getElementById('restoreBtn').onclick = () => document.getElementById('restoreFile').click();
+  document.getElementById('restoreFile').onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      if (!data.inspirations && !data.vows) throw new Error('잘못된 백업 파일');
+      const mode = confirm('기존 데이터에 [덮어쓰지 않고] 병합할까요?\n확인=병합 / 취소=덮어쓰기');
+      if (mode) {
+        // 병합: 기존 + 새 데이터, 이미지별로는 추가 / 중복 timestamp는 제거
+        const cur = loadAll();
+        for (const [k, v] of Object.entries(data.inspirations || {})) {
+          const merged = (cur[k] || []).concat(v);
+          // 동일 ts 중복 제거
+          const seen = new Set();
+          cur[k] = merged.filter(it => {
+            const key = `${it.ts}|${it.text}`;
+            if (seen.has(key)) return false;
+            seen.add(key); return true;
+          }).sort((a,b) => b.ts - a.ts);
+        }
+        saveAll(cur);
+        const curVows = loadVows().concat(data.vows || []);
+        const seen = new Set();
+        const dedupVows = curVows.filter(it => {
+          const key = `${it.ts}|${it.text}`;
+          if (seen.has(key)) return false;
+          seen.add(key); return true;
+        }).sort((a,b) => b.ts - a.ts);
+        saveVows(dedupVows);
+      } else {
+        if (data.inspirations) saveAll(data.inspirations);
+        if (data.vows) saveVows(data.vows);
+      }
+      alert('복원 완료');
+      renderVows();
+      if (currentList.length) renderEntries();
+    } catch (err) {
+      alert('복원 실패: ' + (err.message || err));
+    } finally {
+      e.target.value = '';
+    }
+  };
+
+  el.vowExportBtn.onclick = () => {
+    const items = loadVows();
+    if (!items.length) { alert('저장된 서원이 없습니다.'); return; }
+    const text = items.map(it => `[${fmtDate(it.ts)}]\n${it.text}\n`).join('\n---\n\n');
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `서원_${new Date().toISOString().slice(0,10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  document.addEventListener('click', (e) => {
+    if (!el.folderPopover.contains(e.target) && e.target !== el.moveBtn) {
+      el.folderPopover.classList.add('hidden');
+    }
+  });
+
+  function toggleFolderPopover() {
+    if (el.folderPopover.classList.contains('hidden')) renderFolderPopover();
+    el.folderPopover.classList.toggle('hidden');
+  }
+
+  function renderFolderPopover() {
+    if (!currentList.length) return;
+    const currentPath = currentList[currentIdx];
+    const inFolder = currentPath.includes('/') ? currentPath.split('/')[0] : '_unclassified';
+    const items = manifest.clusters.map(c => {
+      const isCurrent = c.id === inFolder;
+      return `<div class="popover-item ${isCurrent ? 'current' : ''}" data-id="${escapeHtml(c.id)}">
+        <span>${escapeHtml(c.label)}${isCurrent ? ' (현재 위치)' : ''}</span>
+        <span class="pcnt">${c.images.length}</span>
+      </div>`;
+    }).join('');
+    el.folderPopover.innerHTML = `
+      <div class="popover-header">어느 폴더로 옮길까요?</div>
+      <div class="popover-list">
+        ${items}
+        <div class="popover-item new" data-action="new">+ 새 폴더 만들어 옮기기</div>
+      </div>`;
+    el.folderPopover.querySelectorAll('.popover-item').forEach(node => {
+      node.onclick = () => {
+        if (node.classList.contains('current')) return;
+        if (node.dataset.action === 'new') {
+          showNewFolderInput();
+        } else {
+          moveCurrentTo(node.dataset.id);
+        }
+      };
+    });
+  }
+
+  function showNewFolderInput() {
+    const list = el.folderPopover.querySelector('.popover-list');
+    if (list.querySelector('.popover-newrow')) return;
+    const row = document.createElement('div');
+    row.className = 'popover-newrow';
+    row.innerHTML = `<input type="text" placeholder="새 폴더 이름 (Enter)" maxlength="80">`;
+    list.appendChild(row);
+    const input = row.querySelector('input');
+    input.focus();
+    input.addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const name = input.value.trim();
+        if (!name) return;
+        input.disabled = true;
+        try {
+          const r = await fetch('/folder/create', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ name })
+          });
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+          await moveCurrentTo(name);
+        } catch (err) {
+          alert(err.message || String(err));
+          input.disabled = false;
+          input.focus();
+        }
+      } else if (e.key === 'Escape') {
+        row.remove();
+      }
+    });
+  }
+
+  async function moveCurrentTo(folderId) {
+    if (!currentList.length) return;
+    const path = currentList[currentIdx];
+    try {
+      const r = await fetch('/move', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ old: path, dest: folderId === '_unclassified' ? '' : folderId })
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+      // 충돌로 파일명 변경된 경우 localStorage 키 마이그레이션
+      if (data.old_basename !== data.new_basename) {
+        const all = loadAll();
+        if (all[data.old_basename]) {
+          if (all[data.new_basename]) {
+            all[data.new_basename] = all[data.new_basename].concat(all[data.old_basename]);
+          } else {
+            all[data.new_basename] = all[data.old_basename];
+          }
+          delete all[data.old_basename];
+          saveAll(all);
+        }
+      }
+      el.folderPopover.classList.add('hidden');
+      // 현재 클러스터 그대로 두고 manifest 새로고침. 이동 후 인덱스 보정.
+      const prevClusterId = currentCluster?.id;
+      const r2 = await fetch('manifest.json?_=' + Date.now());
+      manifest = await r2.json();
+      const cluster = manifest.clusters.find(c => c.id === prevClusterId) || manifest.clusters[0];
+      currentCluster = cluster;
+      currentList = cluster.images;
+      // 다음 이미지로 자연스럽게 진행 (현재 위치를 유지)
+      if (currentIdx >= currentList.length) currentIdx = Math.max(0, currentList.length - 1);
+      el.themeTitle.textContent = cluster.label;
+      el.themeSub.textContent = `${cluster.images.length}장의 이미지`;
+      renderClusters();
+      showImage();
+    } catch (err) {
+      alert(err.message || String(err));
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (document.activeElement === el.input) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        document.getElementById('saveBtn').click();
+      }
+      return;
+    }
+    // 서원 모드이거나 텍스트 입력 중이면 화살표 비활성
+    if (el.main.classList.contains('vow-mode')) return;
+    if (document.activeElement && ['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+    if (e.key === 'ArrowLeft') go(-1);
+    else if (e.key === 'ArrowRight') go(1);
+  });
+
+  function applyStaticMode() {
+    if (!IS_STATIC) return;
+    document.body.classList.add('static-mode');
+  }
+
+  function loadManifest(preferId) {
+    fetch('manifest.json?_=' + Date.now())
+      .then(r => r.json())
+      .then(m => {
+        manifest = m;
+        if (!m.clusters.length) {
+          el.clusters.innerHTML = '<div class="empty" style="padding:20px 12px">images/ 폴더가 비어있습니다.</div>';
+          el.list.innerHTML = '<div class="empty">이미지가 없습니다.</div>';
+          currentCluster = null;
+          currentList = [];
+          showImage();
+          return;
+        }
+        const target = m.clusters.find(c => c.id === preferId) || m.clusters[0];
+        selectCluster(target);
+      })
+      .catch(err => {
+        const isFile = location.protocol === 'file:';
+        el.list.innerHTML = `<div class="empty">manifest.json을 불러올 수 없습니다.${isFile ? '<br><br>이 페이지는 file:// 환경에서 동작하지 않아요.<br>터미널에서:<br><br><code>cd "' + decodeURIComponent(location.pathname.replace(/[^\\/]+$/, '')) + '" && python3 serve.py</code><br><br>그 후 <b>http://localhost:8765/inspiration.html</b> 접속' : '<br>' + escapeHtml(String(err))}</div>`;
+      });
+  }
+
+  applyStaticMode();
+  loadManifest();
+</script>
+</body>
+</html>
