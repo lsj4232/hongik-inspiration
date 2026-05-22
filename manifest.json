@@ -1,32 +1,12 @@
 {
   "clusters": [
     {
-      "id": "구공",
-      "label": "구공",
-      "images": [
-        "구공/017dbae3a5242.jpg",
-        "구공/0c96dac25a04c.jpg"
-      ]
-    },
-    {
-      "id": "법공",
-      "label": "법공",
-      "images": [
-        "법공/0afce5fb529e6.jpg"
-      ]
-    },
-    {
-      "id": "아공",
-      "label": "아공",
-      "images": [
-        "아공/00c8627e76f6a.jpg",
-        "아공/0106f5845eb0c.jpg"
-      ]
-    },
-    {
       "id": "_unclassified",
-      "label": "미분류",
+      "label": "전체",
       "images": [
+        "00c8627e76f6a.jpg",
+        "0106f5845eb0c.jpg",
+        "017dbae3a5242.jpg",
         "0198540d8229b.jpg",
         "01c7c39599a2c.jpg",
         "0276fe85d0c71.jpg",
@@ -38,6 +18,8 @@
         "083ce00c41888.jpg",
         "0a45fb1e044b5.jpg",
         "0a59d0a9be1f0.jpg",
+        "0afce5fb529e6.jpg",
+        "0c96dac25a04c.jpg",
         "0cf9d842f6d03.jpg",
         "0d109862cd28c.jpg",
         "0d9b06577a39c.jpg",
