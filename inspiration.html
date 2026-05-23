@@ -1054,15 +1054,28 @@
     }
   }
 
-  function selectCluster(c) {
+  function selectCluster(c, startIdx = 0) {
     currentCluster = c;
     currentList = c.images;
-    currentIdx = 0;
+    currentIdx = (startIdx >= 0 && startIdx < c.images.length) ? startIdx : 0;
     el.themeTitle.textContent = c.label;
     el.themeSub.textContent = `${c.images.length}장의 이미지`;
     showImageView();
     renderClusters();
     showImage();
+  }
+
+  // 모든 이미지를 풀로 보고 1장을 균등 랜덤 선택 → 그 이미지가 속한 클러스터와 인덱스 반환
+  function pickRandomStart(clusters) {
+    const pool = clusters.filter(c => c.images.length > 0);
+    if (!pool.length) return { cluster: clusters[0], idx: 0 };
+    const total = pool.reduce((s, c) => s + c.images.length, 0);
+    let r = Math.floor(Math.random() * total);
+    for (const c of pool) {
+      if (r < c.images.length) return { cluster: c, idx: r };
+      r -= c.images.length;
+    }
+    return { cluster: pool[0], idx: 0 };
   }
 
   function showImage() {
@@ -1560,8 +1573,13 @@
           showImage();
           return;
         }
-        const target = m.clusters.find(c => c.id === preferId) || m.clusters[0];
-        selectCluster(target);
+        if (preferId) {
+          const target = m.clusters.find(c => c.id === preferId) || m.clusters[0];
+          selectCluster(target);
+        } else {
+          const { cluster, idx } = pickRandomStart(m.clusters);
+          selectCluster(cluster, idx);
+        }
       })
       .catch(err => {
         const isFile = location.protocol === 'file:';
